@@ -1,0 +1,32 @@
+{% extends "books/base.html" %}
+
+{% block nav_login %}active{% endblock nav_login %}
+
+{% block content %}
+
+{% if next %}
+    {% if user.is_authenticated %}
+    <p>Your account doesn't have access to this page. To proceed,
+    please login with an account that has access.</p>
+    {% else %}
+    <p>Please login to see this page.</p>
+    {% endif %}
+{% endif %}
+
+{% load crispy_forms_tags %}
+
+<form method="post" action="{% url 'login' %}">
+{% csrf_token %}
+{{form|crispy}}
+
+<div class="container d-grid gap-2 col-3 mx-auto">
+    <input type="submit" value="Login" class="btn btn-success">
+    <input type="hidden" name="next" value="{{ next }}">
+</div>
+</form>
+
+<div class="container">
+    <p class="my-2 text-center">Don't have an account? Sign up <a href="#">Here</a>.</p>
+</div>
+
+{% endblock %}
