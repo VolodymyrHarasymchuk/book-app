@@ -1,0 +1,14 @@
+{% extends "books/base.html" %}
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<form method="post" action="{% url 'logout' %}">
+{% csrf_token %}
+
+<div class="container d-grid gap-2 col-3 mx-auto">
+    <input type="submit" value="Logout" class="btn btn-success">
+</div>
+</form>
+
+{% endblock %}
