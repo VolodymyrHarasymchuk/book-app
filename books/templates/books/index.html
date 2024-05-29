@@ -10,7 +10,7 @@
                 <a href="{% url 'books:book_info' book.id %}" class="col-12 w-100 btn btn-outline-dark text-start"
                 style="--bs-btn-padding-y: 2rem; --bs-btn-padding-x: 1rem;">
                     <div class="row">
-                        <div class="col-md-auto d-flex justify-content-center align-items-center"><img src="/media/{{book.image}}" alt="" width="120" height="200"></div>
+                        <div class="col-md-auto d-flex justify-content-center align-items-center"><img src="/media/{{book.image}}" alt="" width="120" height="200" class="shadow-lg" style="max-width: 100%; max-height: 100%;"></div>
                         <div class="col">
                             <div class="row row-cols-1">
                                 <div class="col"><h2>{{book.name}}</h2></div>

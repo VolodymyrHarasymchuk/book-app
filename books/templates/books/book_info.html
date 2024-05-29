@@ -3,11 +3,14 @@
 {% block content %}
 <div class="row">
     <div class="col-lg-auto d-flex justify-content-center align-items-center">
-        <img src="/media/{{book.image}}" alt="" width="225" height="400">
+        <img src="/media/{{book.image}}" alt="" width="240" height="400" class="shadow-lg" style="max-width: 100%; max-height: 100%;">
     </div>
     <div class="col">
         <h2>{{book.name}}</h2>
+        <h4><i>{{book.user}}</i></h4>
         <p>{{book.description}}</p>
+        <p>ISBN: {{book.isbn}}</p>
+        <p>Date published: {{book.date_pub}}</p>
     </div>
 </div>
 {% endblock content %}
