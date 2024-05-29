@@ -6,7 +6,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from .decorators import author_required
 from .models import Book, Review
-from .forms import CustomUserCreationForm, BookForm
+from .forms import CustomUserCreationForm, BookForm, ReviewForm
 
 def index(request):
     latest_books_list = Book.objects.order_by("date_posted")[:5]
@@ -28,7 +28,19 @@ def sign_up(request):
 def book_info(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
     latest_reviews_list = Review.objects.filter(book_id=book_id).order_by("-date_posted")[:5]
-    return render(request, "books/book_info.html", {"book": book, "latest_reviews_list": latest_reviews_list})
+
+    if request.method == "POST":
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = request.user
+            review.book = book
+            review.save()
+            return HttpResponseRedirect(reverse("books:book_info", args=[book_id]))
+    else:
+        form = ReviewForm()
+    
+    return render(request, "books/book_info.html", {"book": book, "latest_reviews_list": latest_reviews_list, "form": form})
 
 @login_required
 @author_required
