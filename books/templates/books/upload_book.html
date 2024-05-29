@@ -3,6 +3,7 @@
 {% block content %}
 
 {% load crispy_forms_tags %}
+{% load widget_tweaks %}
 
 <form method="post" enctype="multipart/form-data" action="{% url 'books:upload_book' %}">
 {% csrf_token %}

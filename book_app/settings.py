@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'books.apps.BooksConfig',
     'crispy_forms',
     'crispy_bootstrap5',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
