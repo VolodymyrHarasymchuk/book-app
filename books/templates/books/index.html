@@ -7,7 +7,7 @@
     <div class="d-grid gap-2">
         {% for book in latest_books_list %}
             <div class="row align-items-center">
-                <div class="col-12 w-100 btn btn-outline-dark text-start"
+                <a href="{% url 'books:book_info' book.id %}" class="col-12 w-100 btn btn-outline-dark text-start"
                 style="--bs-btn-padding-y: 2rem; --bs-btn-padding-x: 1rem;">
                     <div class="row">
                         <div class="col-md-auto d-flex justify-content-center align-items-center"><img src="/media/{{book.image}}" alt="" width="120" height="200"></div>
@@ -18,7 +18,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         {% endfor %}
     </div>

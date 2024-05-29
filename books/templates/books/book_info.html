@@ -1,0 +1,13 @@
+{% extends "books/base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-auto d-flex justify-content-center align-items-center">
+        <img src="/media/{{book.image}}" alt="" width="225" height="400">
+    </div>
+    <div class="col">
+        <h2>{{book.name}}</h2>
+        <p>{{book.description}}</p>
+    </div>
+</div>
+{% endblock content %}

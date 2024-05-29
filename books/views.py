@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.forms import UserCreationForm
@@ -24,6 +24,10 @@ def sign_up(request):
         form = CustomUserCreationForm()
     
     return render(request, "registration/sign_up.html", {"form": form})
+
+def book_info(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+    return render(request, "books/book_info.html", {"book": book})
 
 @login_required
 @author_required
