@@ -41,6 +41,14 @@
                 <div class="col">
                     <p style="text-align: right;">{{review.date_posted}}</p>
                     <p>{{review.text}}</p>
+                    {% if review.user == request.user %}
+                    <div class="d-flex justify-content-end">
+                        <form method="post" action="{% url 'books:delete_review' review.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="submit" value="Delete" class="btn btn-danger btn-sm">
+                        </form>
+                    </div>
+                    {% endif %}
                     <hr>
                 </div>
             </div>

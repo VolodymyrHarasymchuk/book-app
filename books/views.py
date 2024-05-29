@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.forms import UserCreationForm
@@ -27,7 +27,7 @@ def sign_up(request):
 
 def book_info(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
-    latest_reviews_list = Review.objects.filter(book_id=book_id).order_by("-date_posted")[:5]
+    latest_reviews_list = Review.objects.filter(book_id=book_id).order_by("-date_posted")[:10]
 
     if request.method == "POST":
         form = ReviewForm(request.POST)
@@ -55,3 +55,10 @@ def upload_book(request):
     else:
         form = BookForm()
     return render(request, 'books/upload_book.html', {'form': form})
+
+@login_required
+def delete_review(request, review_id):
+    review = get_object_or_404(Review, pk=review_id)
+    if review.user == request.user:
+        review.delete()
+    return redirect('books:book_info', book_id=review.book.id)
