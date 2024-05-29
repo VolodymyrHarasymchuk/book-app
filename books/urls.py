@@ -10,5 +10,6 @@ urlpatterns = [
     path("upload_book", views.upload_book, name="upload_book"),
     path("book_info/<int:book_id>", views.book_info, name="book_info"),
     path('delete_review/<int:review_id>/', views.delete_review, name='delete_review'),
+    path("rate_book/<int:book_id>/", views.rate_book, name="rate_book"),
     path("logout_user/", TemplateView.as_view(template_name='registration/logout_user.html'), name='logout_user'),
 ]

@@ -6,7 +6,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from .decorators import author_required
 from .models import Book, Review
-from .forms import CustomUserCreationForm, BookForm, ReviewForm
+from .forms import CustomUserCreationForm, BookForm, ReviewForm, RatingForm
 
 def index(request):
     latest_books_list = Book.objects.order_by("date_posted")[:5]
@@ -62,3 +62,15 @@ def delete_review(request, review_id):
     if review.user == request.user:
         review.delete()
     return redirect('books:book_info', book_id=review.book.id)
+
+def rate_book(request, book_id):
+    if request.method == 'POST':
+        form = RatingForm(request.POST)
+        if form.is_valid():
+            rating = form.cleaned_data['rating']
+            book = get_object_or_404(Book, pk=book_id)
+            book.add_rating(int(rating))
+            return HttpResponseRedirect(reverse("books:book_info", args=[book_id]))
+    else:
+        form = RatingForm()
+    return render(request, 'books/index.html')

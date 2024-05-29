@@ -22,3 +22,11 @@ class ReviewForm(forms.ModelForm):
         widgets = {
             'text': forms.Textarea(attrs={'rows': 4, 'cols': 40}),
         }
+
+class RatingForm(forms.Form):
+    rating = forms.IntegerField(
+        label='Rate the book:',
+        min_value=1,
+        max_value=5,
+        widget=forms.NumberInput(attrs={'type': 'range', 'class': 'form-range', 'min': 1, 'max': 5})
+    )

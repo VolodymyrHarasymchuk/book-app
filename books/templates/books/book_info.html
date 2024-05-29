@@ -7,7 +7,17 @@
 <div class="row">
     <div class="col-lg-auto d-flex flex-column justify-content-center align-items-center">
         <img src="/media/{{book.image}}" alt="" width="240" height="400" class="shadow-lg" style="max-width: 100%; max-height: 100%; margin-bottom: 30px;">
-        <p><b>Rating: {{book.rating}}/5</b></p>
+        <p><b>Rating: {{ book.rating }}/5</b></p>
+        <form method="post" action="{% url 'books:rate_book' book.id %}">
+            {% csrf_token %}
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <div class="form-group col-md-8">
+                    <label for="ratingSlider">Rate the book:</label>
+                    <input type="range" min="1" max="5" value="3" class="form-range" id="ratingSlider" name="rating">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Rating</button>
+            </div>
+        </form>
     </div>
     <div class="col">
         <h2>{{book.name}}</h2>

@@ -14,8 +14,16 @@ class Book(models.Model):
     description = models.CharField(max_length=1000)
     date_pub = models.DateTimeField("book publishing date")
     date_posted = models.DateTimeField(default=timezone.now)
-    rating = models.IntegerField(default=1)
     image = models.ImageField(upload_to="images/", null=True, blank=True)
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)
+    num_ratings = models.PositiveIntegerField(default=0)
+
+    def add_rating(self, new_rating):
+        total_rating = self.rating * self.num_ratings
+        total_rating += new_rating
+        self.num_ratings += 1
+        self.rating = total_rating / self.num_ratings
+        self.save()
 
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
