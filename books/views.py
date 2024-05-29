@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
 from .models import Book
 from .forms import CustomUserCreationForm, BookForm
 
@@ -23,11 +24,14 @@ def sign_up(request):
     
     return render(request, "registration/sign_up.html", {"form": form})
 
+@login_required
 def upload_book(request):
     if request.method == "POST":
         form = BookForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            book = form.save(commit=False)
+            book.user = request.user
+            book.save()
             return HttpResponseRedirect(reverse("books:index"))
     else:
         form = BookForm()
