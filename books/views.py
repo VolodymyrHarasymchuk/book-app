@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from .decorators import author_required
-from .models import Book
+from .models import Book, Review
 from .forms import CustomUserCreationForm, BookForm
 
 def index(request):
@@ -27,7 +27,8 @@ def sign_up(request):
 
 def book_info(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
-    return render(request, "books/book_info.html", {"book": book})
+    latest_reviews_list = Review.objects.filter(book_id=book_id).order_by("-date_posted")[:5]
+    return render(request, "books/book_info.html", {"book": book, "latest_reviews_list": latest_reviews_list})
 
 @login_required
 @author_required
