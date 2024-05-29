@@ -21,7 +21,7 @@
                         <li class="nav-item px-2">
                             <a class="nav-link {% block nav_home %} {% endblock %}" href="{% url 'books:index' %}">Home</a>
                         </li>
-                        {% if user.is_authenticated %}
+                        {% if user.is_authenticated and user.type == 'author' %}
                             <li class="nav-item px-2">
                                 <a class="nav-link {% block nav_upload %} {% endblock %}" href="{% url 'books:upload_book' %}">Upload Book</a>
                             </li>

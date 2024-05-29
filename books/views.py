@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from .decorators import author_required
 from .models import Book
 from .forms import CustomUserCreationForm, BookForm
 
@@ -25,6 +26,7 @@ def sign_up(request):
     return render(request, "registration/sign_up.html", {"form": form})
 
 @login_required
+@author_required
 def upload_book(request):
     if request.method == "POST":
         form = BookForm(request.POST, request.FILES)
