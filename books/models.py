@@ -15,6 +15,7 @@ class Book(models.Model):
     date_pub = models.DateTimeField("book publishing date")
     date_posted = models.DateTimeField(default=timezone.now)
     rating = models.IntegerField(default=1)
+    image = models.ImageField(upload_to="images/", null=True, blank=True)
 
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
