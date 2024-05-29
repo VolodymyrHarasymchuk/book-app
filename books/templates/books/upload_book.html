@@ -1,0 +1,17 @@
+{% extends "books/base.html" %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<form method="post" enctype="multipart/form-data" action="{% url 'books:upload_book' %}">
+{% csrf_token %}
+
+{{form|crispy}}
+
+<div class="container d-grid gap-2 col-3 mx-auto">
+    <input type="submit" value="Upload" class="btn btn-success">
+</div>
+</form>
+
+{% endblock %}

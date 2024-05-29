@@ -23,7 +23,7 @@
                         </li>
                         {% if user.is_authenticated %}
                             <li class="nav-item px-2">
-                                <a class="nav-link {% block nav_question %} {% endblock %}" href="#">Create Question</a>
+                                <a class="nav-link {% block nav_upload %} {% endblock %}" href="{% url 'books:upload_book' %}">Upload Book</a>
                             </li>
                         {% endif %}
                         <li class="nav-item px-2">

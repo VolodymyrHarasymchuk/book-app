@@ -7,5 +7,6 @@ app_name = "books"
 urlpatterns = [
     path("", views.index, name="index"),
     path("sign_up", views.sign_up, name="sign_up"),
+    path("upload_book", views.upload_book, name="upload_book"),
     path("logout_user/", TemplateView.as_view(template_name='registration/logout_user.html'), name='logout_user'),
 ]
