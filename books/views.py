@@ -9,9 +9,9 @@ from .models import Book
 from .forms import CustomUserCreationForm, BookForm
 
 def index(request):
-#    latest_question_list = Book.objects.filter(pub_date__lte=timezone.now()).exclude(choice__isnull=True).order_by("pub_date")
-#    context = { "latest_question_list": latest_question_list }
-    return render(request, "books/index.html")
+    latest_books_list = Book.objects.order_by("date_posted")[:5]
+    context = { "latest_books_list": latest_books_list }
+    return render(request, "books/index.html", context)
 
 def sign_up(request):
     if request.method == "POST":
