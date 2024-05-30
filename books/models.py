@@ -15,6 +15,7 @@ class Book(models.Model):
     date_pub = models.DateTimeField("book publishing date")
     date_posted = models.DateTimeField(default=timezone.now)
     image = models.ImageField(upload_to="images/", null=True, blank=True)
+    file = models.FileField(upload_to='files/', null=True, blank=True)
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)
     num_ratings = models.PositiveIntegerField(default=0)
 

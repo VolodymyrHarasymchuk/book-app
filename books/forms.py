@@ -10,7 +10,7 @@ class CustomUserCreationForm(UserCreationForm):
 class BookForm(forms.ModelForm):
     class Meta:
         model = Book
-        fields = ['name', 'isbn', 'description', 'date_pub', 'image']
+        fields = ['name', 'isbn', 'description', 'date_pub', 'image', 'file']
         widgets = {
             'date_pub': forms.DateInput(attrs={'type': 'date'}),
         }
