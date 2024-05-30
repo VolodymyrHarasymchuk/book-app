@@ -6,12 +6,21 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from .decorators import author_required
 from .models import Book, Review
-from .forms import CustomUserCreationForm, BookForm, ReviewForm, RatingForm
+from .forms import CustomUserCreationForm, BookForm, ReviewForm, RatingForm, BookSearchForm
 
 def index(request):
     latest_books_list = Book.objects.order_by("date_posted")[:5]
-    context = { "latest_books_list": latest_books_list }
-    return render(request, "books/index.html", context)
+    form = BookSearchForm()
+    return render(request, "books/index.html", { "latest_books_list": latest_books_list, "form": form})
+
+def search_results(request):
+    query = request.GET.get('query')
+    if query:
+        books = Book.objects.filter(name__icontains=query)
+    else:
+        books = Book.objects.all()
+    form = BookSearchForm()
+    return render(request, 'books/search_results.html', {'books': books, 'query': query, "form": form})
 
 def sign_up(request):
     if request.method == "POST":

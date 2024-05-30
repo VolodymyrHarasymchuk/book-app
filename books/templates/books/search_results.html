@@ -2,8 +2,6 @@
 
 {% load crispy_forms_tags %}
 
-{% block nav_home %}active{% endblock nav_home %}
-
 {% block content %}
     <div class="">
         <form method="get" class="container d-grid gap-2 col-5 mx-auto" action="{% url 'books:search_results' %}" style="margin-bottom: 30px;">
@@ -14,9 +12,13 @@
             </div>
         </form>
     </div>
-    {% if latest_books_list %}
+    <h1>Search Results</h1>
+    {% if query %}
+        <p>Results for "{{ query }}":</p>
+    {% endif %}
+    {% if books %}
     <div class="d-grid gap-2">
-        {% for book in latest_books_list %}
+        {% for book in books %}
             <div class="row align-items-center">
                 <a href="{% url 'books:book_info' book.id %}" class="col-12 w-100 btn btn-outline-dark text-start"
                 style="--bs-btn-padding-y: 2rem; --bs-btn-padding-x: 1rem;">

@@ -30,3 +30,6 @@ class RatingForm(forms.Form):
         max_value=5,
         widget=forms.NumberInput(attrs={'type': 'range', 'class': 'form-range', 'min': 1, 'max': 5})
     )
+
+class BookSearchForm(forms.Form):
+    query = forms.CharField(label='Search for books', max_length=100)
