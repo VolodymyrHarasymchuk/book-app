@@ -15,7 +15,7 @@
                     <label for="ratingSlider">Rate the book:</label>
                     <input type="range" min="1" max="5" value="3" class="form-range" id="ratingSlider" name="rating">
                 </div>
-                <button type="submit" class="btn btn-primary">Submit Rating</button>
+                <button type="submit" class="btn btn-primary" {% if not user.is_authenticated %} disabled {% endif %}>Submit Rating</button>
             </div>
         </form>
     </div>
