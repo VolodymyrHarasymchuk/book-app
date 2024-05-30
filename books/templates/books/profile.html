@@ -1,0 +1,44 @@
+{% extends "books/base.html" %}
+
+{% block nav_profile %}active{% endblock nav_profile %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-auto shadow rounded d-flex flex-column justify-content-center align-items-center" style="margin-right: 30px;">
+        <img src="/media/images/pfp.jpg" alt="" width="250" height="250" class="shadow-lg rounded-circle" style="max-width: 100%; max-height: 100%; margin-bottom: 30px;">
+    </div>
+    <div class="col shadow rounded">
+        <style>
+            .table tbody tr {
+                height: 60px;
+                vertical-align: middle;
+            }
+        </style>
+        <table class="table table-striped">
+            <tr>
+                <th>First name</th>
+                <th>{{user.first_name}}</th>
+            </tr>
+            <tr>
+                <th>Last name</th>
+                <th>{{user.last_name}}</th>
+            </tr>
+            <tr>
+                <th>Username</th>
+                <th>@{{user.username}}</th>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <th>{{user.type}}</th>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="container shadow rounded" style="margin-top: 30px; min-height: 200px;">
+    <h2>About Me:</h2>
+    <p>{{user.bio_text}}</p>
+</div>
+
+
+{% endblock content %}

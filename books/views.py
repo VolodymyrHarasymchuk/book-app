@@ -42,6 +42,9 @@ def book_info(request, book_id):
     
     return render(request, "books/book_info.html", {"book": book, "latest_reviews_list": latest_reviews_list, "form": form})
 
+def profile(request):
+    return render(request, "books/profile.html")
+
 @login_required
 @author_required
 def upload_book(request):
