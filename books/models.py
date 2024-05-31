@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     type = models.CharField(max_length=20, choices={"reader": "reader", "author": "author"})
-    bio_text = models.CharField(max_length=1000)
+    bio_text = models.CharField(max_length=1000, null=True, blank=True)
 
 class Book(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

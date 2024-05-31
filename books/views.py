@@ -38,7 +38,11 @@ def sign_up(request):
 def book_info(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
     latest_reviews_list = Review.objects.filter(book_id=book_id).order_by("-date_posted")[:10]
-    rated = Ratings.objects.filter(user=request.user, book=book).exists()
+    rated = False
+
+    if request.user.is_authenticated:
+        rated = Ratings.objects.filter(user=request.user, book=book).exists()
+
 
     if request.method == "POST":
         form = ReviewForm(request.POST)
