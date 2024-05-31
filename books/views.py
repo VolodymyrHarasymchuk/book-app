@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from .decorators import author_required
 from .models import Book, Review
 from .forms import CustomUserCreationForm, BookForm, ReviewForm, RatingForm, BookSearchForm
@@ -16,7 +17,7 @@ def index(request):
 def search_results(request):
     query = request.GET.get('query')
     if query:
-        books = Book.objects.filter(name__icontains=query)
+        books = Book.objects.filter(Q(name__icontains=query) | Q(user__first_name__icontains=query) | Q(user__last_name__icontains=query))
     else:
         books = Book.objects.all()
     form = BookSearchForm()
