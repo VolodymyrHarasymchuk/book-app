@@ -5,6 +5,23 @@
 {% block nav_home %}active{% endblock nav_home %}
 
 {% block content %}
+
+<style>
+    .truncate-description {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    @media (max-width: 768px) {
+        .truncate-description {
+            white-space: normal;
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* Number of lines to show */
+            -webkit-box-orient: vertical;
+        }
+    }
+</style>
+
     <div class="">
         <form method="get" class="container d-grid gap-2 col-5 mx-auto" action="{% url 'books:search_results' %}" style="margin-bottom: 30px;">
             {% csrf_token %}
@@ -25,7 +42,7 @@
                         <div class="col">
                             <div class="row row-cols-1">
                                 <div class="col"><h2>{{book.name}}</h2></div>
-                                <div class="col"><p>{{book.description}}</p></div>
+                                <div class="col"><p class="truncate-description">{{book.description}}</p></div>
                             </div>
                         </div>
                     </div>

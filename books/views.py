@@ -9,7 +9,7 @@ from .models import Book, Review
 from .forms import CustomUserCreationForm, BookForm, ReviewForm, RatingForm, BookSearchForm
 
 def index(request):
-    latest_books_list = Book.objects.order_by("date_posted")[:5]
+    latest_books_list = Book.objects.order_by("date_posted")[:8]
     form = BookSearchForm()
     return render(request, "books/index.html", { "latest_books_list": latest_books_list, "form": form})
 

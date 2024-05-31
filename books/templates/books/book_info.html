@@ -3,14 +3,27 @@
 {% block content %}
 
 {% load crispy_forms_tags %}
+{% load static %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    
+    <style>
+        .book-title {
+            font-family: "Josefin Sans", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: <weight>;
+            font-style: normal;
+          }
+    </style>
 
 <div class="row" style="margin-bottom: 30px;">
     <div class="col-lg-auto shadow rounded d-flex flex-column justify-content-center align-items-center" style="margin-right: 30px; padding-bottom: 20px;">
-        <img src="/media/{{book.image}}" alt="" width="240" height="400" class="shadow-lg" style="max-width: 100%; max-height: 100%; margin-bottom: 20px;">
+        <img src="/media/{{book.image}}" alt="" width="240" height="400" class="img-fluid rounded shadow-lg" style="max-width: 100%; max-height: 400px; margin-bottom: 15px;">
         <p><b>Rating: {{ book.rating }}/5</b></p>
         <form method="post" action="{% url 'books:rate_book' book.id %}">
             {% csrf_token %}
-            <div class="d-flex flex-column justify-content-center align-items-center">
+            <div class="d-flex flex-column justify-content-center align-items-center" style="margin-top: -10px;">
                 <div class="form-group col-md-8">
                     <label for="ratingSlider">Rate the book:</label>
                     <input type="range" min="1" max="5" value="3" class="form-range" id="ratingSlider" name="rating">
@@ -19,15 +32,17 @@
             </div>
         </form>
         {% if book.file %}
-        <a href="{{ book.file.url }}" class="btn btn-success" style="margin-top: 20px;" download>Buy Book</a>
+        <a href="{{ book.file.url }}" class="btn btn-success" style="margin-top: 15px;" download>Buy Book</a>
         {% endif %}
     </div>
-    <div class="col shadow rounded">
-        <h2>{{book.name}}</h2>
-        <h4><i>{{book.user.first_name}} {{book.user.last_name}}</i></h4>
-        <p>{{book.description}}</p>
-        <p>ISBN: {{book.isbn}}</p>
-        <p>Date published: {{book.date_pub}}</p>
+    <div class="col-lg shadow rounded p-4">
+        <h2 class="book-title">{{ book.name }}</h2>
+        <h4 class="text-muted"><i>{{ book.user.first_name }} {{ book.user.last_name }}</i></h4>
+        <p class="mt-4">{{ book.description }}</p>
+        <ul class="list-unstyled mt-3">
+            <li><strong>ISBN:</strong> {{ book.isbn }}</li>
+            <li><strong>Date published:</strong> {{ book.date_pub }}</li>
+        </ul>
     </div>
 </div>
 
