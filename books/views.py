@@ -6,7 +6,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .decorators import author_required
-from .models import Book, Review
+from .models import Book, Review, Ratings
 from .forms import CustomUserCreationForm, BookForm, ReviewForm, RatingForm, BookSearchForm
 
 def index(request):
@@ -38,6 +38,7 @@ def sign_up(request):
 def book_info(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
     latest_reviews_list = Review.objects.filter(book_id=book_id).order_by("-date_posted")[:10]
+    rated = Ratings.objects.filter(user=request.user, book=book).exists()
 
     if request.method == "POST":
         form = ReviewForm(request.POST)
@@ -49,8 +50,32 @@ def book_info(request, book_id):
             return HttpResponseRedirect(reverse("books:book_info", args=[book_id]))
     else:
         form = ReviewForm()
+        rating_form = RatingForm()
     
-    return render(request, "books/book_info.html", {"book": book, "latest_reviews_list": latest_reviews_list, "form": form})
+    return render(request, "books/book_info.html", {
+        "book": book, 
+        "latest_reviews_list": latest_reviews_list, 
+        "form": form,
+        "rating_form": rating_form,
+        "rated": rated,
+    })
+
+def rate_book(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+
+    if Ratings.objects.filter(user=request.user, book=book).exists():
+        return HttpResponseRedirect(reverse("books:book_info", args=[book_id]))
+    
+    if request.method == 'POST':
+        form = RatingForm(request.POST)
+        if form.is_valid():
+            rating_value = form.cleaned_data['rating']
+            book.add_rating(int(rating_value))
+            Ratings.objects.create(user=request.user, book=book, rating=rating_value)
+            return HttpResponseRedirect(reverse("books:book_info", args=[book_id]))
+    else:
+        form = RatingForm()
+    return render(request, 'books/book_info.html', {'form': form, 'book': book})
 
 def profile(request):
     return render(request, "books/profile.html")
@@ -75,15 +100,3 @@ def delete_review(request, review_id):
     if review.user == request.user:
         review.delete()
     return redirect('books:book_info', book_id=review.book.id)
-
-def rate_book(request, book_id):
-    if request.method == 'POST':
-        form = RatingForm(request.POST)
-        if form.is_valid():
-            rating = form.cleaned_data['rating']
-            book = get_object_or_404(Book, pk=book_id)
-            book.add_rating(int(rating))
-            return HttpResponseRedirect(reverse("books:book_info", args=[book_id]))
-    else:
-        form = RatingForm()
-    return render(request, 'books/index.html')

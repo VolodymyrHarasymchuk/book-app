@@ -32,3 +32,12 @@ class Review(models.Model):
     text = models.CharField(max_length=1000)
     date_posted = models.DateTimeField(default=timezone.now)
     rating = models.IntegerField(default=1)
+
+class Ratings(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField()
+    date_rated = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        unique_together = ('user', 'book')
