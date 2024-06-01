@@ -10,7 +10,7 @@ class User(AbstractUser):
 class Book(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=400)
-    isbn = models.IntegerField()
+    isbn = models.BigIntegerField()
     description = models.CharField(max_length=1000)
     date_pub = models.DateTimeField("book publishing date")
     date_posted = models.DateTimeField(default=timezone.now)
