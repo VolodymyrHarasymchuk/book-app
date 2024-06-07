@@ -7,6 +7,12 @@ class User(AbstractUser):
     type = models.CharField(max_length=20, choices={"reader": "reader", "author": "author"})
     bio_text = models.CharField(max_length=1000, null=True, blank=True)
     followers = models.ManyToManyField('self', symmetrical=False, related_name='following')
+    
+    def followers_count(self):
+        return self.followers.count()
+
+    def following_count(self):
+        return self.following.count()
 
 class Book(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

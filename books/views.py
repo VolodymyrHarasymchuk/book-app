@@ -81,9 +81,13 @@ def rate_book(request, book_id):
         form = RatingForm()
     return render(request, 'books/book_info.html', {'form': form, 'book': book})
 
-def profile(request, user_id):
-    user = get_object_or_404(User, pk=user_id)
-    return render(request, "books/profile.html", {"user": user})
+@login_required
+def profile(request, user_id=None):
+    if user_id:
+        user = get_object_or_404(User, id=user_id)
+    else:
+        user = request.user
+    return render(request, 'books/profile.html', {'user': user})
 
 @login_required
 @author_required

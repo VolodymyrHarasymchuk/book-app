@@ -21,7 +21,7 @@
                         <li class="nav-item px-2">
                             <a class="nav-link {% block nav_home %} {% endblock %}" href="{% url 'books:index' %}">Home</a>
                         </li>
-                        {% if user.is_authenticated and user.type == 'author' %}
+                        {% if user.is_authenticated and request.user.type == 'author' %}
                             <li class="nav-item px-2">
                                 <a class="nav-link {% block nav_upload %} {% endblock %}" href="{% url 'books:upload_book' %}">Upload Book</a>
                             </li>
@@ -36,7 +36,7 @@
                             <a class="nav-link" href="{% url 'books:logout_user' %}">Logout</a>
                         </li>
                         <li class="nav-item px-2">
-                            <a class="nav-link {% block nav_profile %} {% endblock %}" href="{% url 'books:profile' user.id%}">My Profile</a>
+                            <a class="nav-link {% block nav_profile %} {% endblock %}" href="{% url 'books:profile' %}">My Profile</a>
                         </li>
                         {% endif %}
                     </ul>
