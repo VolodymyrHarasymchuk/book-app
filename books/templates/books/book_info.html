@@ -71,7 +71,7 @@
         {% for review in latest_reviews_list %}
             <div class="row">
                 <div class="col-2 d-flex flex-column align-items-center justify-content-center">
-                    <h5>{{review.user.first_name}} {{review.user.last_name}}</h5>
+                    <h5><a href="{% url 'books:profile' review.user.id %}">{{review.user.first_name}} {{review.user.last_name}}</a></h5>
                     <h6>@{{review.user.username}}</h6>
                 </div>
                 <div class="col">

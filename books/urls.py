@@ -11,7 +11,9 @@ urlpatterns = [
     path("book_info/<int:book_id>/", views.book_info, name="book_info"),
     path('delete_review/<int:review_id>/', views.delete_review, name='delete_review'),
     path("rate_book/<int:book_id>/", views.rate_book, name="rate_book"),
-    path("profile/", views.profile, name="profile"),
-     path('search/', views.search_results, name='search_results'),
+    path("profile/<int:user_id>/", views.profile, name="profile"),
+    path('search/', views.search_results, name='search_results'),
+    path('follow_user/<int:user_id>/', views.follow_user, name='follow_user'),
+    path('unfollow_user/<int:user_id>/', views.unfollow_user, name='unfollow_user'),
     path("logout_user/", TemplateView.as_view(template_name='registration/logout_user.html'), name='logout_user'),
 ]

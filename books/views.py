@@ -6,7 +6,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .decorators import author_required
-from .models import Book, Review, Ratings
+from .models import Book, Review, Ratings, User
 from .forms import CustomUserCreationForm, BookForm, ReviewForm, RatingForm, BookSearchForm
 
 def index(request):
@@ -81,8 +81,9 @@ def rate_book(request, book_id):
         form = RatingForm()
     return render(request, 'books/book_info.html', {'form': form, 'book': book})
 
-def profile(request):
-    return render(request, "books/profile.html")
+def profile(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    return render(request, "books/profile.html", {"user": user})
 
 @login_required
 @author_required
@@ -104,3 +105,17 @@ def delete_review(request, review_id):
     if review.user == request.user:
         review.delete()
     return redirect('books:book_info', book_id=review.book.id)
+
+@login_required
+def follow_user(request, user_id):
+    user_to_follow = get_object_or_404(User, id=user_id)
+    if user_to_follow != request.user:
+        request.user.following.add(user_to_follow)
+    return redirect('books:profile', user_id=user_id)
+
+@login_required
+def unfollow_user(request, user_id):
+    user_to_unfollow = get_object_or_404(User, id=user_id)
+    if user_to_unfollow != request.user:
+        request.user.following.remove(user_to_unfollow)
+    return redirect('books:profile', user_id=user_id)
