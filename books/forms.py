@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import User, Book, Review
+from .models import User, Book, Review, Purchase
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
@@ -33,3 +33,8 @@ class RatingForm(forms.Form):
 
 class BookSearchForm(forms.Form):
     query = forms.CharField(label='Search for books', max_length=100)
+
+class PurchaseForm(forms.ModelForm):
+    class Meta:
+        model = Purchase
+        fields = []

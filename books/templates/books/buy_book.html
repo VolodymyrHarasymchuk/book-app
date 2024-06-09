@@ -1,0 +1,43 @@
+{% extends "books/base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Buy {{ book.name }}</h2>
+    <p>Price: ${{ book.price }}</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Buy Now</button>
+    </form>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+    const stripe = Stripe('{{ stripe_public_key }}');
+    const checkoutButton = document.getElementById('checkout-button');
+
+    checkoutButton.addEventListener('click', function () {
+        fetch("{% url 'books:buy_book' book.id %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                price_id: "{{ book.id }}"
+            })
+        }).then(function (response) {
+            return response.json();
+        }).then(function (session) {
+            return stripe.redirectToCheckout({ sessionId: session.id });
+        }).then(function (result) {
+            if (result.error) {
+                alert(result.error.message);
+            }
+        }).catch(function (error) {
+            console.error("Error:", error);
+        });
+    });
+</script>
+
+{% endblock %}

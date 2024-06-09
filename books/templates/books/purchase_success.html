@@ -1,0 +1,10 @@
+{% extends "books/base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Purchase Successful</h2>
+    <p>Thank you for purchasing {{ book.name }}!</p>
+    <p>Amount Paid: ${{ book.price }}</p>
+    <a href="{{ book.file.url }}" class="btn btn-success" download>Download Book</a>
+</div>
+{% endblock %}

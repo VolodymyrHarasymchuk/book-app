@@ -3,6 +3,8 @@ import datetime
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 
+from book_app import settings
+
 class User(AbstractUser):
     type = models.CharField(max_length=20, choices={"reader": "reader", "author": "author"})
     bio_text = models.CharField(max_length=1000, null=True, blank=True)
@@ -23,6 +25,7 @@ class Book(models.Model):
     date_posted = models.DateTimeField(default=timezone.now)
     image = models.ImageField(upload_to="images/", null=True, blank=True)
     file = models.FileField(upload_to='files/', null=True, blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)
     num_ratings = models.PositiveIntegerField(default=0)
 
@@ -48,3 +51,12 @@ class Ratings(models.Model):
 
     class Meta:
         unique_together = ('user', 'book')
+
+class Purchase(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    purchase_date = models.DateTimeField(auto_now_add=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f'{self.user} bought {self.book} for ${self.amount}'

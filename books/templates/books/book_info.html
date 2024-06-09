@@ -32,7 +32,7 @@
             </div>
         </form>
         {% if book.file %}
-        <a href="{{ book.file.url }}" class="btn btn-success" style="margin-top: 15px;" download>Buy Book</a>
+        <a href="{% url 'books:buy_book' book.id %}" class="btn btn-success" style="margin-top: 15px;">Buy Book</a>
         {% endif %}
     </div>
     <div class="col-lg shadow rounded p-4">
@@ -71,7 +71,7 @@
         {% for review in latest_reviews_list %}
             <div class="row">
                 <div class="col-2 d-flex flex-column align-items-center justify-content-center">
-                    <h5><a href="{% url 'books:user_profile' review.user.id %}">{{review.user.first_name}} {{review.user.last_name}}</a></h5>
+                    <h5 style="text-align: center;"><a href="{% url 'books:user_profile' review.user.id %}">{{review.user.first_name}} {{review.user.last_name}}</a></h5>
                     <h6>@{{review.user.username}}</h6>
                 </div>
                 <div class="col">
