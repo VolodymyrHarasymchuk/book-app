@@ -26,9 +26,11 @@ class Book(models.Model):
     date_posted = models.DateTimeField(default=timezone.now)
     image = models.ImageField(upload_to="images/", null=True, blank=True)
     file = models.FileField(upload_to='files/', null=True, blank=True)
+    watermarked_file = models.FileField(upload_to='watermarked_files/', null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)
     num_ratings = models.PositiveIntegerField(default=0)
+    copyright_notice = models.CharField(max_length=500, default="© Author Name. All rights reserved.")
 
     def add_rating(self, new_rating):
         total_rating = self.rating * self.num_ratings

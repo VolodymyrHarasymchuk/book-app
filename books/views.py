@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.urls import reverse
 from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm
@@ -11,6 +11,14 @@ from .models import Book, Review, Ratings, User, Purchase
 from .forms import CustomUserCreationForm, BookForm, ReviewForm, RatingForm, BookSearchForm, EditProfileForm, UserSearchForm
 import stripe
 import logging
+import PyPDF2
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+import os
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.colors import Color
+import io
 
 logger = logging.getLogger(__name__)
 
@@ -199,3 +207,84 @@ def purchase_success(request, book_id):
     return render(request, 'books/purchase_success.html', {
         'book': book
     })
+
+def create_text_watermark(text, filename):
+    # Create a file-like buffer to receive PDF data
+    buffer = io.BytesIO()
+
+    # Create a canvas and set font
+    c = canvas.Canvas(buffer, pagesize=letter)
+    
+    # Set smaller font size
+    c.setFont("Helvetica", 20)
+    
+    # Create a semi-transparent color (alpha value between 0 and 1)
+    semi_transparent_gray = Color(0.5, 0.5, 0.5, alpha=0.3)
+    c.setFillColor(semi_transparent_gray)
+    
+    c.saveState()
+    c.translate(300, 50)
+    c.rotate(45)
+    
+    # Draw the watermark text
+    c.drawString(0, 0, text)
+    c.restoreState()
+    c.showPage()
+    c.save()
+
+    # Write the PDF data to the buffer
+    with open(filename, 'wb') as f:
+        f.write(buffer.getvalue())
+
+    buffer.close()
+
+def add_text_watermark(input_pdf, output_pdf, watermark_text):
+    # Create watermark PDF with text
+    watermark_pdf = "text_watermark.pdf"
+    create_text_watermark(watermark_text, watermark_pdf)
+
+    # Read the watermark PDF
+    watermark = PyPDF2.PdfReader(watermark_pdf)
+    watermark_page = watermark.pages[0]
+    
+    # Read the original PDF
+    pdf_reader = PyPDF2.PdfReader(input_pdf)
+    pdf_writer = PyPDF2.PdfWriter()
+
+    # Add watermark to each page
+    for page_num in range(len(pdf_reader.pages)):
+        page = pdf_reader.pages[page_num]
+        page.merge_page(watermark_page)
+        pdf_writer.add_page(page)
+
+    # Ensure the directory exists
+    os.makedirs(os.path.dirname(output_pdf), exist_ok=True)
+    
+    # Write out the watermarked PDF
+    with open(output_pdf, 'wb') as out:
+        pdf_writer.write(out)
+
+@receiver(post_save, sender=Book)
+def create_watermark(sender, instance, **kwargs):
+    if instance.file and not instance.watermarked_file:
+        original_path = instance.file.path
+        watermarked_dir = os.path.join('media', 'watermarked_files')
+        os.makedirs(watermarked_dir, exist_ok=True)
+        watermarked_path = os.path.join(watermarked_dir, f'watermarked_{os.path.basename(original_path)}')
+        
+        add_text_watermark(original_path, watermarked_path, instance.copyright_notice)
+        
+        instance.watermarked_file.name = os.path.relpath(watermarked_path, 'media')
+        instance.save()
+
+@login_required
+def download_watermarked_book(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+    file_path = os.path.join(settings.MEDIA_ROOT, book.watermarked_file.name)
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as fh:
+            response = HttpResponse(fh.read(), content_type="application/pdf")
+            response['Content-Disposition'] = f'attachment; filename={os.path.basename(file_path)}'
+            return response
+    else:
+        return HttpResponseNotFound("The requested file was not found.")
