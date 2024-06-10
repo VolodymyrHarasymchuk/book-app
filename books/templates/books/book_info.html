@@ -37,7 +37,7 @@
     </div>
     <div class="col-lg shadow rounded p-4">
         <h2 class="book-title">{{ book.name }}</h2>
-        <h4 class="text-muted"><i>{{ book.user.first_name }} {{ book.user.last_name }}</i></h4>
+        <h4><a href="{% url 'books:user_profile' book.user.id %}" style="text-decoration: none; color: grey;"><i>{{ book.user.first_name }} {{ book.user.last_name }}</i></a></h4>
         <p class="mt-4">{{ book.description }}</p>
         <ul class="list-unstyled mt-3">
             <li><strong>ISBN:</strong> {{ book.isbn }}</li>

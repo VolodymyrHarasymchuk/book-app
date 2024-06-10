@@ -171,7 +171,7 @@ def buy_book(request, book_id):
             payment_method_types=['card'],
             line_items=[{
                 'price_data': {
-                    'currency': 'usd',
+                    'currency': 'uah',
                     'product_data': {
                         'name': book.name,
                     },
