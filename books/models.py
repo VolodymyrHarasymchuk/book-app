@@ -8,6 +8,7 @@ from book_app import settings
 class User(AbstractUser):
     type = models.CharField(max_length=20, choices={"reader": "reader", "author": "author"})
     bio_text = models.CharField(max_length=1000, null=True, blank=True)
+    image = models.ImageField(upload_to="images/pfps/", default="/images/pfps/pfp.jpg")
     followers = models.ManyToManyField('self', symmetrical=False, related_name='following')
     
     def followers_count(self):

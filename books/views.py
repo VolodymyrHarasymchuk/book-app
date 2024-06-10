@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .decorators import author_required
 from .models import Book, Review, Ratings, User, Purchase
-from .forms import CustomUserCreationForm, BookForm, ReviewForm, RatingForm, BookSearchForm, PurchaseForm
+from .forms import CustomUserCreationForm, BookForm, ReviewForm, RatingForm, BookSearchForm, EditProfileForm, UserSearchForm
 import stripe
 import logging
 
@@ -17,7 +17,8 @@ logger = logging.getLogger(__name__)
 def index(request):
     latest_books_list = Book.objects.order_by("-date_posted")[:8]
     form = BookSearchForm()
-    return render(request, "books/index.html", { "latest_books_list": latest_books_list, "form": form})
+    form2 = UserSearchForm()
+    return render(request, "books/index.html", { "latest_books_list": latest_books_list, "form": form, "form2": form2})
 
 def search_results(request):
     query = request.GET.get('query')
@@ -27,6 +28,15 @@ def search_results(request):
         books = Book.objects.all()
     form = BookSearchForm()
     return render(request, 'books/search_results.html', {'books': books, 'query': query, "form": form})
+
+def search_results_users(request):
+    query = request.GET.get('query')
+    if query:
+        users = User.objects.filter(Q(username__icontains=query) | Q(first_name__icontains=query) | Q(last_name__icontains=query))
+    else:
+        users = User.objects.all()
+    form = UserSearchForm()
+    return render(request, 'books/search_results_users.html', {'users': users, 'query': query, "form": form})
 
 def sign_up(request):
     if request.method == "POST":
@@ -69,6 +79,7 @@ def book_info(request, book_id):
         "rated": rated,
     })
 
+@login_required
 def rate_book(request, book_id):
     book = get_object_or_404(Book, pk=book_id)
 
@@ -86,13 +97,23 @@ def rate_book(request, book_id):
         form = RatingForm()
     return render(request, 'books/book_info.html', {'form': form, 'book': book})
 
-@login_required
 def profile(request, user_id=None):
     if user_id:
         user = get_object_or_404(User, id=user_id)
     else:
         user = request.user
     return render(request, 'books/profile.html', {'user': user})
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('books:profile')
+    else:
+        form = EditProfileForm(instance=request.user)
+    return render(request, 'books/edit_profile.html', {'form': form})
 
 @login_required
 @author_required
@@ -129,7 +150,18 @@ def unfollow_user(request, user_id):
         request.user.following.remove(user_to_unfollow)
     return redirect('books:user_profile', user_id=user_id)
 
-@login_required
+def list_followers(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    followers = user.followers.all()
+
+    return render(request, "books/list_followers.html", { "followers": followers})
+
+def list_following(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    following = user.following.all()
+
+    return render(request, "books/list_followers.html", { "followers": following})
+
 def buy_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -162,7 +194,6 @@ def buy_book(request, book_id):
 
     return render(request, 'books/buy_book.html', {'book': book, 'stripe_public_key': settings.STRIPE_PUBLISHABLE_KEY})
 
-@login_required
 def purchase_success(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     return render(request, 'books/purchase_success.html', {

@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import User, Book, Review, Purchase
 
 class CustomUserCreationForm(UserCreationForm):
@@ -34,7 +34,16 @@ class RatingForm(forms.Form):
 class BookSearchForm(forms.Form):
     query = forms.CharField(label='Search for books', max_length=100)
 
+class UserSearchForm(forms.Form):
+    query = forms.CharField(label='Search for users', max_length=100)
+
 class PurchaseForm(forms.ModelForm):
     class Meta:
         model = Purchase
         fields = []
+
+class EditProfileForm(UserChangeForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'bio_text', 'image']
+        exclude = ['password']

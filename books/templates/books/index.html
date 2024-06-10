@@ -22,10 +22,17 @@
     }
 </style>
 
-    <div class="">
+    <div class="row">
         <form method="get" class="container d-grid gap-2 col-5 mx-auto" action="{% url 'books:search_results' %}" style="margin-bottom: 30px;">
             {% csrf_token %}
             {{ form|crispy }}
+            <div class="d-grid gap-2 col-4 mx-auto" style="margin-top: -10px;">
+                <button type="submit" class="btn btn-secondary">Search</button>
+            </div>
+        </form>
+        <form method="get" class="container d-grid gap-2 col-5 mx-auto" action="{% url 'books:search_results_users' %}" style="margin-bottom: 30px;">
+            {% csrf_token %}
+            {{ form2|crispy }}
             <div class="d-grid gap-2 col-4 mx-auto" style="margin-top: -10px;">
                 <button type="submit" class="btn btn-secondary">Search</button>
             </div>

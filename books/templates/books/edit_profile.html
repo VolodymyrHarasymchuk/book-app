@@ -1,0 +1,21 @@
+{% extends "books/base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+            {% if field.name != 'password' %}
+                <div class="mb-3">
+                    {{ field|as_crispy_field }}
+                </div>
+            {% endif %}
+        {% endfor %}
+        <div class="container d-grid gap-2 col-3 mx-auto">
+            <input type="submit" value="Save Changes" class="btn btn-success">
+        </div>
+    </form>
+</div>
+{% endblock %}
