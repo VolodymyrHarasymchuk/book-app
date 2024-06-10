@@ -63,3 +63,12 @@ class Purchase(models.Model):
 
     def __str__(self):
         return f'{self.user} bought {self.book} for ${self.amount}'
+    
+class Report(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    description = models.TextField()
+    date_reported = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Report by {self.user.username} on {self.book.name}'

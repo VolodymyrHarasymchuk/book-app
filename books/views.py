@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .decorators import author_required
 from .models import Book, Review, Ratings, User, Purchase
-from .forms import CustomUserCreationForm, BookForm, ReviewForm, RatingForm, BookSearchForm, EditProfileForm, UserSearchForm
+from .forms import CustomUserCreationForm, BookForm, ReviewForm, RatingForm, BookSearchForm, EditProfileForm, UserSearchForm, ReportForm
 import stripe
 import logging
 import PyPDF2
@@ -288,3 +288,20 @@ def download_watermarked_book(request, book_id):
             return response
     else:
         return HttpResponseNotFound("The requested file was not found.")
+    
+@login_required
+def report_book(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+    
+    if request.method == 'POST':
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.user = request.user
+            report.book = book
+            report.save()
+            return redirect('books:book_info', book_id=book_id)
+    else:
+        form = ReportForm()
+    
+    return render(request, 'books/report_book.html', {'form': form, 'book': book})

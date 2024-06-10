@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import User, Book, Review, Purchase
+from .models import User, Book, Review, Purchase, Report
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
@@ -47,3 +47,11 @@ class EditProfileForm(UserChangeForm):
         model = User
         fields = ['username', 'first_name', 'last_name', 'bio_text', 'image']
         exclude = ['password']
+
+class ReportForm(forms.ModelForm):
+    class Meta:
+        model = Report
+        fields = ['description']
+        widgets = {
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Describe the issue...'}),
+        }

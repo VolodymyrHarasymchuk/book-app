@@ -23,5 +23,6 @@ urlpatterns = [
     path('list_following/<int:user_id>/', views.list_following, name='list_following'),
     path('edit_profile/', views.edit_profile, name='edit_profile'),
     path('download_watermarked_book/<int:book_id>', views.download_watermarked_book, name='download_watermarked_book'),
+    path('report_book/<int:book_id>/', views.report_book, name='report_book'),
     path("logout_user/", TemplateView.as_view(template_name='registration/logout_user.html'), name='logout_user'),
 ]

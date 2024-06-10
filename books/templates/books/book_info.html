@@ -97,4 +97,8 @@
     {% endif %}
 </div>
 </div>
+
+<div class="container shadow rounded d-grid align-items-center justify-content-center">
+    <a href="{% url 'books:report_book' book.id %}" class="btn btn-danger" style="margin-top: 30px; margin-bottom: 20px;">Report Book</a>
+</div>
 {% endblock content %}
