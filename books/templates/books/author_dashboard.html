@@ -1,0 +1,21 @@
+{% extends "books/base.html" %}
+
+{% block content %}
+    <h2>Author Dashboard</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Book</th>
+                <th>Purchases</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book, count in book_purchases.items %}
+                <tr>
+                    <td>{{ book.name }}</td>
+                    <td>{{ count }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

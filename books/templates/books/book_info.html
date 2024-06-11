@@ -32,7 +32,7 @@
             </div>
         </form>
         {% if book.file %}
-        <a href="{% url 'books:buy_book' book.id %}" class="btn btn-success" style="margin-top: 15px;">Buy Book</a>
+        <a href="{% url 'books:buy_book' book.id %}" class="btn btn-success" style="margin-top: 15px;">Buy Book: {{book.price}} ₴</a>
         {% endif %}
     </div>
     <div class="col-lg shadow rounded p-4">

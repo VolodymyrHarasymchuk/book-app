@@ -348,3 +348,13 @@ def report_book(request, book_id):
         form = ReportForm()
     
     return render(request, 'books/report_book.html', {'form': form, 'book': book})
+
+@login_required
+def author_dashboard(request):
+    if not request.user.type == 'author':
+        return redirect('profile', user_id=request.user.id)
+
+    books = Book.objects.filter(user=request.user)
+    book_purchases = {book: Purchase.objects.filter(book=book).count() for book in books}
+
+    return render(request, 'books/author_dashboard.html', {'book_purchases': book_purchases})

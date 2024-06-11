@@ -26,5 +26,6 @@ urlpatterns = [
     path('report_book/<int:book_id>/', views.report_book, name='report_book'),
     path('create_book_list/', views.create_book_list, name='create_book_list'),
     path('delete_post/<int:post_id>/', views.delete_post, name='delete_post'),
+    path('author_dashboard/', views.author_dashboard, name='author_dashboard'),
     path("logout_user/", TemplateView.as_view(template_name='registration/logout_user.html'), name='logout_user'),
 ]

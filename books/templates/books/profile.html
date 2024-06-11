@@ -139,4 +139,10 @@
     {% endif %}
 </div>
 
+{% if user.is_authenticated and request.user == user %}
+<hr>
+<div class="d-grid align-items-center" style="text-align: center;">
+    <a class="nav-link" href="{% url 'books:author_dashboard' %}">Author Dashboard</a>
+</div>
+{% endif %}
 {% endblock content %}
