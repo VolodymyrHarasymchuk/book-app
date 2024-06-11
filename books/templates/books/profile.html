@@ -65,22 +65,30 @@
     <p>{{user.bio_text}}</p>
 </div>
 
-<div class="container shadow rounded mt-5">
-    <h3>Book Lists</h3>
-    <ul>
-        {% for book_list in book_lists %}
-            <li>
-                <h4>{{ book_list.name }}</h4>
-                <ul>
-                    {% for book in book_list.books.all %}
-                        <li>{{ book.name }}</li>
-                    {% endfor %}
-                </ul>
-            </li>
-        {% endfor %}
-    </ul>
-    {% if user.is_authenticated and request.user == user %}
-        <a href="{% url 'books:create_book_list' %}" class="btn btn-primary">Create New Book List</a>
+<div class="container shadow rounded mt-4">
+    <h3 class="pt-2">Book Lists</h3>
+    {% if book_lists %}
+        <ul>
+            {% for book_list in book_lists %}
+                <li>
+                    <h4>{{ book_list.name }}</h4>
+                    <ul>
+                        {% for book in book_list.books.all %}
+                            <li><a href="{% url 'books:book_info' book.id %}">{{ book.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+        {% if user.is_authenticated and request.user == user %}
+        <div class="container d-grid gap-2 col-3 mx-auto">
+            <a href="{% url 'books:create_book_list' %}" class="btn btn-primary mb-3">Create New Book List</a>
+        </div>
+        {% endif %}
+    {% else %}
+    <div class="d-grid align-items-center justify-content-center" style="margin-top: 30px;">
+        <h5>There are no lists.</h5>
+    </div>
     {% endif %}
 </div>
 
