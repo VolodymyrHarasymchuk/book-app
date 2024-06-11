@@ -1,5 +1,7 @@
 {% extends "books/base.html" %}
 
+{% load crispy_forms_tags %}
+
 {% block nav_profile %}active{% endblock nav_profile %}
 
 {% block content %}
@@ -86,8 +88,53 @@
         </div>
         {% endif %}
     {% else %}
-    <div class="d-grid align-items-center justify-content-center" style="margin-top: 30px;">
+    <div class="d-grid align-items-center justify-content-center mb-2" style="margin-top: 20px;">
         <h5>There are no lists.</h5>
+    </div>
+    {% if user.is_authenticated and request.user == user %}
+        <div class="container d-grid gap-2 col-3 mx-auto">
+            <a href="{% url 'books:create_book_list' %}" class="btn btn-primary mb-3">Create New Book List</a>
+        </div>
+    {% endif %}
+    {% endif %}
+</div>
+
+<div class="container shadow rounded mt-4">
+    {% if request.user == user %}
+        <h3>Create a Post</h3>
+        <form method="post" action="{% url 'books:user_profile' user.id %}">
+            {% csrf_token %}
+            {{post_form|crispy}}
+            <div class="container d-grid gap-2 col-3 mx-auto">
+                <button type="submit" class="btn btn-success mb-3">Post</button>
+            </div>
+        </form>
+    {% endif %}
+</div>
+<div class="container shadow rounded mt-4">
+    <h3 class="pt-2">Posts</h3>
+    {% if posts %}
+    {% for post in posts %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ post.user.username }}</h5>
+                <p class="card-text">{{ post.content }}</p>
+                <p class="card-text"><small class="text-muted">{{ post.created_at }}</small></p>
+            </div>
+            {% if post.user == request.user %}
+            <div class="d-flex justify-content-end mb-2" style="margin-right: 10px;">
+                <form method="post" action="{% url 'books:delete_post' post.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+    <br>
+    {% else %}
+    <div class="d-grid align-items-center justify-content-center" style="margin-top: 30px;">
+        <h5>There are no posts.</h5>
     </div>
     {% endif %}
 </div>

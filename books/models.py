@@ -83,3 +83,11 @@ class BookList(models.Model):
 
     def __str__(self):
         return f'{self.name} by {self.user.username}'
+    
+class Post(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='posts')
+    content = models.TextField(max_length=1000)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.content[:50]

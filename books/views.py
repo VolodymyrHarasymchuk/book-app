@@ -7,8 +7,8 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .decorators import author_required
-from .models import Book, Review, Ratings, User, Purchase, BookList
-from .forms import CustomUserCreationForm, BookForm, ReviewForm, RatingForm, BookSearchForm, EditProfileForm, UserSearchForm, ReportForm, BookListForm
+from .models import Book, Post, Review, Ratings, User, Purchase, BookList
+from .forms import CustomUserCreationForm, BookForm, ReviewForm, RatingForm, BookSearchForm, EditProfileForm, UserSearchForm, ReportForm, BookListForm, PostForm
 import stripe
 import logging
 import PyPDF2
@@ -110,9 +110,27 @@ def profile(request, user_id=None):
         user = get_object_or_404(User, id=user_id)
     else:
         user = request.user
+
+    if request.method == 'POST':
+        post_form = PostForm(request.POST)
+        if post_form.is_valid():
+            post = post_form.save(commit=False)
+            post.user = request.user
+            post.save()
+            return redirect('books:profile')
+    else:
+        post_form = PostForm()
     
+    posts = Post.objects.filter(user=user).order_by('-created_at')
     book_lists = BookList.objects.filter(user=user)
-    return render(request, 'books/profile.html', {'user': user, 'book_lists': book_lists})
+    return render(request, 'books/profile.html', {'user': user, 'book_lists': book_lists, 'posts': posts, 'post_form': post_form})
+
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == 'POST' and post.user == request.user:
+        post.delete()
+    return redirect('books:user_profile', user_id=post.user.id)
 
 @login_required
 def create_book_list(request):
@@ -129,7 +147,7 @@ def create_book_list(request):
             book_list.user = request.user
             book_list.save()
             form.save_m2m()  # Save the many-to-many data for the form
-            return redirect('profile')  # Redirect to the profile page or any other page you prefer
+            return redirect('books:profile')  # Redirect to the profile page or any other page you prefer
     else:
         form = BookListForm()
 

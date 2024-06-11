@@ -25,5 +25,6 @@ urlpatterns = [
     path('download_watermarked_book/<int:book_id>', views.download_watermarked_book, name='download_watermarked_book'),
     path('report_book/<int:book_id>/', views.report_book, name='report_book'),
     path('create_book_list/', views.create_book_list, name='create_book_list'),
+    path('delete_post/<int:post_id>/', views.delete_post, name='delete_post'),
     path("logout_user/", TemplateView.as_view(template_name='registration/logout_user.html'), name='logout_user'),
 ]
