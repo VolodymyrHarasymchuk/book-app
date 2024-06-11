@@ -7,8 +7,8 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .decorators import author_required
-from .models import Book, Review, Ratings, User, Purchase
-from .forms import CustomUserCreationForm, BookForm, ReviewForm, RatingForm, BookSearchForm, EditProfileForm, UserSearchForm, ReportForm
+from .models import Book, Review, Ratings, User, Purchase, BookList
+from .forms import CustomUserCreationForm, BookForm, ReviewForm, RatingForm, BookSearchForm, EditProfileForm, UserSearchForm, ReportForm, BookListForm
 import stripe
 import logging
 import PyPDF2
@@ -110,7 +110,32 @@ def profile(request, user_id=None):
         user = get_object_or_404(User, id=user_id)
     else:
         user = request.user
-    return render(request, 'books/profile.html', {'user': user})
+    
+    book_lists = BookList.objects.filter(user=user)
+    return render(request, 'books/profile.html', {'user': user, 'book_lists': book_lists})
+
+@login_required
+def create_book_list(request):
+    search_query = request.GET.get('search', '')
+    books = Book.objects.all()
+
+    if search_query:
+        books = books.filter(Q(name__icontains=search_query) | Q(user__first_name__icontains=search_query) | Q(user__last_name__icontains=search_query))
+
+    if request.method == 'POST':
+        form = BookListForm(request.POST)
+        if form.is_valid():
+            book_list = form.save(commit=False)
+            book_list.user = request.user
+            book_list.save()
+            form.save_m2m()  # Save the many-to-many data for the form
+            return redirect('profile')  # Redirect to the profile page or any other page you prefer
+    else:
+        form = BookListForm()
+
+    form.fields['books'].queryset = books  # Update the queryset for the books field
+
+    return render(request, 'books/create_book_list.html', {'form': form, 'search_query': search_query})
 
 @login_required
 def edit_profile(request):

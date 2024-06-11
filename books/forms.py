@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import User, Book, Review, Purchase, Report
+from .models import User, Book, Review, Purchase, Report, BookList
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
@@ -54,4 +54,15 @@ class ReportForm(forms.ModelForm):
         fields = ['description']
         widgets = {
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Describe the issue...'}),
+        }
+
+class BookListForm(forms.ModelForm):
+    search = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Search books...'}))
+
+    class Meta:
+        model = BookList
+        fields = ['name', 'books']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'books': forms.CheckboxSelectMultiple(),
         }

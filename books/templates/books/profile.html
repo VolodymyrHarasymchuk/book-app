@@ -65,5 +65,23 @@
     <p>{{user.bio_text}}</p>
 </div>
 
+<div class="container shadow rounded mt-5">
+    <h3>Book Lists</h3>
+    <ul>
+        {% for book_list in book_lists %}
+            <li>
+                <h4>{{ book_list.name }}</h4>
+                <ul>
+                    {% for book in book_list.books.all %}
+                        <li>{{ book.name }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+    {% if user.is_authenticated and request.user == user %}
+        <a href="{% url 'books:create_book_list' %}" class="btn btn-primary">Create New Book List</a>
+    {% endif %}
+</div>
 
 {% endblock content %}

@@ -39,6 +39,9 @@ class Book(models.Model):
         self.rating = total_rating / self.num_ratings
         self.save()
 
+    def __str__(self):
+        return self.name 
+
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
@@ -72,3 +75,11 @@ class Report(models.Model):
 
     def __str__(self):
         return f'Report by {self.user.username} on {self.book.name}'
+    
+class BookList(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200)
+    books = models.ManyToManyField(Book, blank=True)
+
+    def __str__(self):
+        return f'{self.name} by {self.user.username}'

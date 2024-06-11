@@ -4,7 +4,7 @@
 <div class="container">
     <h2>Purchase Successful</h2>
     <p>Thank you for purchasing {{ book.name }}!</p>
-    <p>Amount Paid: ${{ book.price }}</p>
+    <p>Amount Paid: {{ book.price }} ₴</p>
     {% if book.watermarked_file %}
         <a href="{% url 'books:download_watermarked_book' book.id %}" class="btn btn-success" style="margin-top: 15px;" download>Download Book</a>
     {% endif %}

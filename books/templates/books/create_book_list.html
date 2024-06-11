@@ -1,0 +1,28 @@
+{% extends "books/base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-2">
+    <h2>Create Book List</h2>
+    <div class="form-group mb-5">
+        {{ form.name.label_tag }}
+        {{ form.name }}
+    </div>
+
+    <form method="get" class="mb-3">
+        <input type="text" name="search" class="form-control" placeholder="Search books..." value="{{ search_query }}">
+        <button type="submit" class="btn btn-primary mt-2">Search</button>
+    </form>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="form-group">
+            {{ form.books.label_tag }}
+            {{ form.books }}
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">Create Book List</button>
+    </form>
+</div>
+{% endblock %}
